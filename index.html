@@ -14,9 +14,9 @@
   <!-- Preload LCP image for faster discovery -->
   <link rel="preload"
         as="image"
-        href="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-        imagesrcset="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80 400w,
-                     https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80 800w"
+        href="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=75"
+        imagesrcset="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=75 400w,
+                     https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=75 800w"
         imagesizes="(max-width: 768px) 100vw, 66vw"
         fetchpriority="high">
 
@@ -27,7 +27,7 @@
   <!-- Inline critical CSS for above-the-fold content -->
   <style>
     body {
-      font-family: 'Alegreya', serif;
+      font-family: 'Alegreya', Georgia, serif;
       margin: 0;
       padding: 0;
     }
@@ -44,16 +44,41 @@
       grid-column-gap: 20px;
       grid-row-gap: 10px;
     }
-    .div1 { grid-area: 1 / 1 / 3 / 2; }
-    .div2 { grid-area: 1 / 2 / 2 / 3; }
-    .div3 { grid-area: 2 / 2 / 3 / 3; }
+    .div1 {
+      grid-area: 1 / 1 / 3 / 2;
+      position: relative;
+    }
+    .div2 {
+      grid-area: 1 / 2 / 2 / 3;
+      position: relative;
+    }
+    .div3 {
+      grid-area: 2 / 2 / 3 / 3;
+      position: relative;
+    }
     .main__content img {
       width: 100%;
       height: auto;
+      display: block;
+    }
+    .hero__carousel img {
+      aspect-ratio: 800 / 533;
+      object-fit: cover;
+    }
+    .hero__teaser img {
+      aspect-ratio: 400 / 267;
+      object-fit: cover;
     }
     .header__base {
       background-color: #f5f5f5;
       padding: 20px;
+    }
+    .header__image {
+      display: block;
+    }
+    /* Reserve space for main sections to prevent CLS */
+    .main__teasers {
+      min-height: 400px;
     }
   </style>
 
@@ -63,14 +88,8 @@
   <link rel="stylesheet" href="styles/mobile.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="styles/mobile.css"></noscript>
 
-  <!-- Non-blocking external CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"></noscript>
 </head>
 <body>
-  <div id="cookie-vue">
-    <!-- Cookie layer will be dynamically inserted by app.js -->
-  </div>
   <header class="header__base">
     <div class="header__content">
       <a class="header__logo" href="#" aria-label="The Rum Diary - Home">
@@ -110,42 +129,32 @@
       </div>
       
       <div class="main__hero main__section">
-        <div class="hero__carousel div1 swiper">
-          <!-- Additional required wrapper -->
-          <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide">
-              <img src="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-                   srcset="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80 400w,
-                           https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80 800w"
-                   sizes="(max-width: 768px) 100vw, 66vw"
-                   alt="Restaurant food plate"
-                   width="800"
-                   height="533"
-                   fetchpriority="high">
-            </div>
-            <div class="swiper-slide"></div>
-            <div class="swiper-slide"></div>
-          </div>
+        <div class="hero__carousel div1">
+          <img src="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=75"
+               srcset="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=75 400w,
+                       https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=75 800w"
+               sizes="(max-width: 768px) 100vw, 66vw"
+               alt="Restaurant food plate"
+               width="800"
+               height="533"
+               fetchpriority="high">
           <div class="swiper-text">Local restaurants finally optimising time to first bite</div>
         </div>
 
         <div class="hero__teaser div2">
-          <img src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+          <img src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=75"
                alt="Waterfall landscape"
                class="hero__img"
                width="400"
-               height="267"
-               loading="lazy">
+               height="267">
           <div class="hero__teaserText">Top 10 waterfalls to analyse this week</div>
         </div>
         <div class="hero__teaser div3">
-          <img src="https://images.unsplash.com/photo-1646271912756-44f11896cfea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+          <img src="https://images.unsplash.com/photo-1646271912756-44f11896cfea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=75"
                alt="Analytics dashboard"
                class="hero__img"
                width="400"
-               height="300"
-               loading="lazy">
+               height="300">
           <div class="hero__teaserText">Bouncing rates increased significantly last week</div>
         </div>
       </div>
@@ -153,10 +162,10 @@
       <div class="main__teasers main__section">
         <article class="teaser__base">
           <img class="teaser__image"
-               src="https://images.unsplash.com/photo-1631857455684-a54a2f03665f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+               src="https://images.unsplash.com/photo-1631857455684-a54a2f03665f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=350&q=75"
                alt="Party celebration"
-               width="400"
-               height="267"
+               width="350"
+               height="233"
                loading="lazy">
           <h2 class="teaser__title">First Party</h2>
           <p class="teaser__text">Discover the latest insights on first-party data collection and analytics.</p>
@@ -164,10 +173,10 @@
         </article>
         <article class="teaser__base">
           <img class="teaser__image"
-               src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+               src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=350&q=75"
                alt="Business meeting"
-               width="400"
-               height="267"
+               width="350"
+               height="233"
                loading="lazy">
           <h2 class="teaser__title">Second Party</h2>
           <p class="teaser__text">Learn about second-party data sharing and collaboration strategies.</p>
@@ -175,10 +184,10 @@
         </article>
         <article class="teaser__base">
           <img class="teaser__image"
-               src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=400&q=80"
+               src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=350&q=75"
                alt="Technology and data"
-               width="400"
-               height="267"
+               width="350"
+               height="233"
                loading="lazy">
           <h2 class="teaser__title">Third Party</h2>
           <p class="teaser__text">Explore the changing landscape of third-party cookies and tracking.</p>
@@ -235,7 +244,5 @@
   </footer>
 
   <!-- Deferred Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js" defer></script>
-  <script src="script/carousel.js" defer></script>
   <script src="script/app.js" defer></script>
 </body>

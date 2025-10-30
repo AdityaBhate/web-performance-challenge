@@ -8,8 +8,7 @@
 
   <!-- DNS prefetch and preconnect for external resources -->
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="dns-prefetch" href="https://player.vimeo.com">
+  <link rel="dns-prefetch" href="https://vumbnail.com">
 
   <!-- Preload LCP image for faster discovery -->
   <link rel="preload"
@@ -62,11 +61,15 @@
       display: block;
     }
     .hero__carousel img {
-      aspect-ratio: 800 / 533;
+      aspect-ratio: 3 / 2;
       object-fit: cover;
     }
     .hero__teaser img {
-      aspect-ratio: 400 / 267;
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+    }
+    .teaser__image {
+      aspect-ratio: 3 / 2;
       object-fit: cover;
     }
     .header__base {
@@ -82,10 +85,10 @@
     }
   </style>
 
-  <!-- Non-critical CSS -->
-  <link rel="stylesheet" href="styles/index.css" media="print" onload="this.media='all'">
+  <!-- Non-critical CSS - properly deferred -->
+  <link rel="stylesheet" href="styles/index.css" media="print" onload="this.media='all';this.onload=null;">
   <noscript><link rel="stylesheet" href="styles/index.css"></noscript>
-  <link rel="stylesheet" href="styles/mobile.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="styles/mobile.css" media="print" onload="this.media='all';this.onload=null;">
   <noscript><link rel="stylesheet" href="styles/mobile.css"></noscript>
 
 </head>
@@ -202,14 +205,12 @@
       
       <section class="main__video main__section">
         <h2 class="visually-hidden">Lighthouse Video</h2>
-        <iframe src="https://player.vimeo.com/video/44265326?h=1e8b36c00b&byline=0&muted=1&controls=1"
-                width="640"
-                height="360"
-                style="border: 0;"
-                allow="fullscreen; picture-in-picture"
-                allowfullscreen
-                title="Lighthouse demonstration video"
-                loading="lazy"></iframe>
+        <div class="video-container" id="vimeo-container" style="position: relative; width: 640px; max-width: 100%; height: 360px; background: #000; cursor: pointer;">
+          <button class="video-facade" id="video-play-btn" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; border: 2px solid white; border-radius: 50%; width: 80px; height: 80px; font-size: 0; cursor: pointer; z-index: 10;" aria-label="Play video">
+            <svg viewBox="0 0 24 24" width="40" height="40" style="margin-left: 5px;"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          </button>
+          <img src="https://vumbnail.com/44265326.jpg" alt="Video thumbnail" style="width: 100%; height: 100%; object-fit: cover;" width="640" height="360" loading="lazy">
+        </div>
         <form class="form__base" id="lighthouse-form" aria-labelledby="form-heading">
           <h3 id="form-heading" class="visually-hidden">Lighthouse Feedback Form</h3>
           <p class="form__intro">Something about lighthouses, describing point of the video we are putting here to prove how awesome they really are.</p>

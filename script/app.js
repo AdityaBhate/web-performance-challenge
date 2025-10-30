@@ -21,10 +21,38 @@ const initForm = () => {
   }
 };
 
+// Lazy load Vimeo video on click
+const initVideoFacade = () => {
+  const playBtn = document.getElementById('video-play-btn');
+  const container = document.getElementById('vimeo-container');
+
+  if (!playBtn || !container) return;
+
+  const loadVideo = () => {
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://player.vimeo.com/video/44265326?h=1e8b36c00b&byline=0&muted=1&controls=1&autoplay=1';
+    iframe.width = '640';
+    iframe.height = '360';
+    iframe.style.border = '0';
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.title = 'Lighthouse demonstration video';
+
+    container.innerHTML = '';
+    container.appendChild(iframe);
+  };
+
+  playBtn.addEventListener('click', loadVideo);
+  container.addEventListener('click', loadVideo);
+};
+
 // Initialize app efficiently
 const initApp = () => {
   // Initialize form immediately
   initForm();
+
+  // Initialize video facade
+  initVideoFacade();
 
   // Load non-critical content
   if ('requestIdleCallback' in window) {

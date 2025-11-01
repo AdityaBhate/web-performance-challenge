@@ -1,85 +1,70 @@
-const CONTENT_BREAKING_NEWS = "BREAKING NEWS: 5 people arrested for non designing responsively ***** Sprite popularity drops even further after new, less sugary, drink introduction.*****"
-const CONTENT_ARTICLE_TEASERS = [
-  "This is an article about first party that happened this weekend",
-  "This is an article about second party that happened this weekend",
-  "This is an article about third party that happened this weekend" ];
+// Minimal app.js - no layout shifts, no performance bottlenecks
+const CONTENT_BREAKING_NEWS = "BREAKING NEWS: 5 people arrested for non designing responsively ***** Sprite popularity drops even further after new, less sugary, drink introduction.*****";
 
-const acceptCookies = () => {
-  document.body.classList.remove('no-scroll');
-  document.querySelector('.cookieLayer__base').classList.add('cookieLayer__base--accepted');
-};
-
-const dynamicContent = () => {
-  const teasers = document.querySelectorAll('.teaser__text');
-  const marqueeBar = document.querySelector('marquee');
-
-  // mock content delay
-  setTimeout(() => marqueeBar.innerHTML = CONTENT_BREAKING_NEWS, 3000);
-
-  // create dynamic content
-  teasers.forEach((teaser, index) => {
-    teaser.innerHTML = CONTENT_ARTICLE_TEASERS[index];
-  });
-};
-
-const cookieLayerInit = () => {
-  Vue.component('CookieLayer', {
-    template: `<div class="cookieLayer__content">
-        <h2 class="cookieLayer__title">{{ title }}</h2>
-        <p class="cookieLayer__text">{{ text1 }}</p>
-        <p class="cookieLayer__text">{{ text2 }}</p>
-        <button class="cookieLayer__button" button v-on:click="$emit('accept')">{{ buttonLabel }}</button>
-        <div class="cookieLayer__disclaimer">{{ disclaimer }}</div>
-      </div>`,
-      data: function () {
-        return {
-          title: 'Do you like cookies ?',
-          text1: 'This is the best chocolate chip cookies recipe ever! No funny ingredients, no chilling time, etc. Just a simple, straightforward, amazingly delicious, doughy yet still fully cooked, chocolate chip cookie that turns out perfectly every single time!',
-          text2: 'The first step in making these easy chocolate chip cookies to to combine the dry ingredients in a medium size bowl. Next, cream together butter and sugars. Add the eggs & vanilla and beat to combine. Add dry ingredients and stir until just combined. Then add the chocolate chips and beat until they are evenly distributed throughout the dough.',
-          buttonLabel: 'I solemny swear I will bake these cookies',
-          disclaimer: 'This box is made using Vue.js and is super awesome !!! ............. or is it ???'
-        }
-      },
-  });
-
-  const vueApp = new Vue({
-    el: '#cookie-vue',
-    data: { 
-      displayCookieBox: true,
-    },
-    methods: {
-      acceptCookies() {
-        this.displayCookieBox = false;
-        document.body.classList.remove('no-scroll');
-      }
-    },
-    mounted() {
-      document.body.classList.add('no-scroll');
-    }
-  });
-};
-
-const layoutTrashing = (n) => {
-  for (let i = 0; i < n; i++) {
-    const container = document.querySelector('header');
-    console.log(container.clientTop);
+// Optimized dynamic content loading
+const loadDynamicContent = () => {
+  // Load breaking news content
+  const newsTicker = document.querySelector('.news-ticker');
+  if (newsTicker) {
+    newsTicker.textContent = CONTENT_BREAKING_NEWS;
   }
 };
 
-const JSblocking = () => {
-  let n = 1000000;
-  while (n) { n--;}
-}
-
-const initApp = () => {
-  const lazyLoadInstance = new LazyLoad();
-  
-  layoutTrashing(20);
-  dynamicContent();
-  setTimeout(() => console.log('Hello World!'), 3000);
-  JSblocking();
-  cookieLayerInit();
-  lazyLoadInstance.update();
+// Handle form submission
+const initForm = () => {
+  const form = document.getElementById('lighthouse-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Form submitted successfully!');
+    });
+  }
 };
 
-initApp();
+// Lazy load Vimeo video on click
+const initVideoFacade = () => {
+  const playBtn = document.getElementById('video-play-btn');
+  const container = document.getElementById('vimeo-container');
+
+  if (!playBtn || !container) return;
+
+  const loadVideo = () => {
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://player.vimeo.com/video/44265326?h=1e8b36c00b&byline=0&muted=1&controls=1&autoplay=1';
+    iframe.width = '640';
+    iframe.height = '360';
+    iframe.style.border = '0';
+    iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.title = 'Lighthouse demonstration video';
+
+    container.innerHTML = '';
+    container.appendChild(iframe);
+  };
+
+  playBtn.addEventListener('click', loadVideo);
+  container.addEventListener('click', loadVideo);
+};
+
+// Initialize app efficiently
+const initApp = () => {
+  // Initialize form immediately
+  initForm();
+
+  // Initialize video facade
+  initVideoFacade();
+
+  // Load non-critical content
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(loadDynamicContent);
+  } else {
+    setTimeout(loadDynamicContent, 1);
+  }
+};
+
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}

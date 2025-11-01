@@ -1,101 +1,225 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="http://slowfil.es/file?type=css&delay=1000&sync-in-head" />
-  <link rel="stylesheet" href="styles/index.css" />
-  <link rel="preload" href="background.jpg" as="image">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Rum Diary - Your source for web performance news, articles, and lighthouse testing insights" />
+  <title>The Rum Diary</title>
+
+  <!-- DNS prefetch and preconnect for external resources -->
+  <link rel="preconnect" href="https://images.unsplash.com">
+  <link rel="dns-prefetch" href="https://images.unsplash.com">
+  <link rel="dns-prefetch" href="https://vumbnail.com">
+
+  <!-- Preload LCP image for faster discovery -->
+  <link rel="preload"
+        as="image"
+        href="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=60"
+        imagesrcset="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=60 400w,
+                     https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=60 800w"
+        imagesizes="(max-width: 768px) 100vw, 66vw"
+        fetchpriority="high">
+
+  <!-- Preload critical fonts -->
   <link rel="preload" href="fonts/alegreya-v29-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="fonts/alegreya-v29-latin-900.woff2" as="font" type="font/woff2" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap" rel="stylesheet">
-  <script src="https://slowfil.es/file?type=js&delay=2000"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <script src="https://unpkg.com/vuex"></script>
-  <script>
-    // Adobe Target pre-hiding code snippet 
-    ;(function(win, doc, style, timeout) {
-      var STYLE_ID = 'at-body-style';
 
-      function getParent() {
-        return doc.getElementsByTagName('head')[0];
-      }
+  <!-- Inline critical CSS for above-the-fold content -->
+  <style>
+    /* Font loading with optional to prevent CLS */
+    @font-face {
+      font-family: 'Alegreya';
+      font-style: normal;
+      font-weight: 400;
+      font-display: optional;
+      src: url('fonts/alegreya-v29-latin-regular.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Alegreya';
+      font-style: normal;
+      font-weight: 900;
+      font-display: optional;
+      src: url('fonts/alegreya-v29-latin-900.woff2') format('woff2');
+    }
 
-      function addStyle(parent, id, def) {
-        if (!parent) {
-          return;
-        }
+    body {
+      font-family: 'Alegreya', Georgia, serif;
+      margin: 0;
+      padding: 0;
+    }
 
-        var style = doc.createElement('style');
-        style.id = id;
-        style.innerHTML = def;
-        parent.appendChild(style);
-      }
+    /* Main base - critical for layout stability */
+    .main__base {
+      display: block;
+      width: 100%;
+    }
 
-      function removeStyle(parent, id) {
-        if (!parent) {
-          return;
-        }
+    .main__advertising {
+      background-color: #f0f0f0;
+      padding: 30px 100px;
+      display: flex;
+      justify-content: space-around;
+      min-height: 90px;
+    }
 
-        var style = doc.getElementById(id);
+    .main__content {
+      padding: 30px;
+      margin: auto;
+      max-width: 1200px;
+    }
 
-        if (!style) {
-          return;
-        }
+    /* News section - reserve space */
+    .main__news {
+      min-height: 40px;
+      margin-bottom: 30px;
+    }
 
-        parent.removeChild(style);
-      }
+    .news-ticker {
+      line-height: 30px;
+      background-color: #8B0000;
+      color: #FFFFFF;
+      padding: 5px;
+    }
 
-      addStyle(getParent(), STYLE_ID, style);
-      setTimeout(function() {
-        removeStyle(getParent(), STYLE_ID);
-      }, timeout);
-    }(window, document, "body {opacity: 0 !important}", 3000));
-  </script>
-  <script>
-    // advertisment mock
-    const initAd = () => {
-      const adSpace = document.querySelector('.main__advertising');
-      const gif = '<div style="width:400px;max-width:100%;"><div style="height:0;padding-bottom:52.4%;position:relative;"><iframe width="500" height="262" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/6wy03z"></iframe></div></div>';
-      setTimeout(() => adSpace.innerHTML = gif, 3000);
-    };
-    // Slow JS
-    function wait(ms) {
-      var start = Date.now(),
-      now = start;
-      while (now - start < ms) {
-        now = Date.now();
-      }
-    };
+    /* Hero section - fixed dimensions prevent CLS */
+    .main__hero {
+      height: 400px;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: repeat(2, 1fr);
+      grid-column-gap: 20px;
+      grid-row-gap: 10px;
+      margin-bottom: 30px;
+    }
 
-    // async CSS
-    function loadMobileCSS() {
-      $('head').append(`<link rel="stylesheet" type="text/css" href="styles/mobile.css">`);
-    };
+    .div1 {
+      grid-area: 1 / 1 / 3 / 2;
+      position: relative;
+    }
+    .div2 {
+      grid-area: 1 / 2 / 2 / 3;
+      position: relative;
+    }
+    .div3 {
+      grid-area: 2 / 2 / 3 / 3;
+      position: relative;
+    }
 
-    wait(2000);
-    window.addEventListener('load', () => {
-      initAd();
-      loadMobileCSS();
-    });
-  </script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
-  <script src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js'></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.8.3/dist/lazyload.min.js"></script>
-  <title>The Rum Diary</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0" />
+    .hero__carousel, .hero__teaser {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main__content img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .hero__carousel img {
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+      height: 100%;
+    }
+
+    .hero__teaser img {
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+      height: 100%;
+    }
+
+    .swiper-text, .hero__teaserText {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .teaser__image {
+      aspect-ratio: 3 / 2;
+      object-fit: cover;
+    }
+
+    .header__base {
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+
+    .header__content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header__image {
+      display: block;
+    }
+
+    .navigation__list {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 20px;
+    }
+
+    .navigation__link {
+      text-decoration: none;
+      color: #333;
+      padding: 10px;
+    }
+
+    /* Reserve space for main sections to prevent CLS */
+    .main__teasers {
+      min-height: 400px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .teaser__base {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main__section {
+      margin-bottom: 30px;
+    }
+
+    /* Visibility helper */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+
+  <!-- Non-critical CSS - properly deferred -->
+  <link rel="stylesheet" href="styles/index.css" media="print" onload="this.media='all';this.onload=null;">
+  <noscript><link rel="stylesheet" href="styles/index.css"></noscript>
+  <link rel="stylesheet" href="styles/mobile.css" media="print" onload="this.media='all';this.onload=null;">
+  <noscript><link rel="stylesheet" href="styles/mobile.css"></noscript>
+
 </head>
 <body>
-  <div id="cookie-vue">
-    <cookie-layer class="cookieLayer__base" v-show="displayCookieBox" v-on:accept="acceptCookies()"/>
-  </div>
   <header class="header__base">
     <div class="header__content">
-      <a class="header__logo" href="#">
-        <img class="header__image" src="./logo.png">
+      <a class="header__logo" href="#" aria-label="The Rum Diary - Home">
+        <img class="header__image" src="./logo.svg" alt="The Rum Diary Logo" width="200" height="50">
       </a>
       <div class="header__navigation">
         <ul class="navigation__list">
@@ -120,96 +244,129 @@
   </header>
 
   <main class="main__base">
+    <h1 class="visually-hidden">The Rum Diary - Web Performance News</h1>
     <div class="main__advertising"></div>
-    
+
     <div class="main__content">
-      <div class="main__news main__section">
-        <marquee width="100%" direction="left" style="line-height: 30px;background-color: darkred;color: red;"></marquee>
+      <div class="main__news main__section" role="banner" aria-live="polite">
+        <div class="news-ticker">
+          <!-- News content can be added here -->
+        </div>
       </div>
       
       <div class="main__hero main__section">
-        <div class="hero__carousel div1 swiper">
-          <!-- Additional required wrapper -->
-          <div class="swiper-wrapper">
-            <!-- Slides -->
-            <div class="swiper-slide lazy"><img src="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&fm=png&fit=crop&w=1170&q=100"></div>
-            <div class="swiper-slide"></div>
-            <div class="swiper-slide"></div>
-          </div>
+        <div class="hero__carousel div1">
+          <img src="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=60"
+               srcset="https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=60 400w,
+                       https://images.unsplash.com/flagged/photo-1579632993381-847f6a71a3cd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=800&q=60 800w"
+               sizes="(max-width: 768px) 100vw, 66vw"
+               alt="Restaurant food plate"
+               width="800"
+               height="533"
+               fetchpriority="high">
           <div class="swiper-text">Local restaurants finally optimising time to first bite</div>
         </div>
-        <script src="script/carousel.js"></script>
-        
+
         <div class="hero__teaser div2">
-          <img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" data-src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&fm=png&fit=crop&h=400&q=100" class="hero__img lazy">
+          <img src="https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=50"
+               alt="Waterfall landscape"
+               class="hero__img"
+               width="400"
+               height="267">
           <div class="hero__teaserText">Top 10 waterfalls to analyse this week</div>
         </div>
         <div class="hero__teaser div3">
-          <img src="https://media2.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif" data-src="https://images.unsplash.com/photo-1646271912756-44f11896cfea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&fm=png&fit=crop&w=1180&q=80" class="hero__img lazy">
-          <div class="hero__teaserText">Bouncing rates increased signifincantly last week</div>
+          <img src="https://images.unsplash.com/photo-1646271912756-44f11896cfea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=400&q=50"
+               alt="Analytics dashboard"
+               class="hero__img"
+               width="400"
+               height="300">
+          <div class="hero__teaserText">Bouncing rates increased significantly last week</div>
         </div>
       </div>
 
       <div class="main__teasers main__section">
         <article class="teaser__base">
-          <img class="teaser__image" src="https://images.unsplash.com/photo-1631857455684-a54a2f03665f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&fm=png&fit=crop&w=1170&q=100" class="card__img"><hr>
-          <h1 class="teaser__title">First Party</h1>
-          <div class="teaser__text"></div>
-          <button class="teaser__link">Read more</button>
+          <img class="teaser__image"
+               src="https://images.unsplash.com/photo-1631857455684-a54a2f03665f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=350&q=50"
+               alt="Party celebration"
+               width="350"
+               height="233"
+               loading="lazy">
+          <h2 class="teaser__title">First Party</h2>
+          <p class="teaser__text">Discover the latest insights on first-party data collection and analytics.</p>
+          <a href="#" class="teaser__link" role="button">Read more</a>
         </article>
         <article class="teaser__base">
-          <img class="teaser__image" src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&fm=pngfit=crop&w=1170&q=100" class="card__img"><hr>
-          <h1 class="teaser__title">Second Party</h1>
-          <div class="teaser__text"></div>
-          <button class="teaser__link">Read more</button>
+          <img class="teaser__image"
+               src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=350&q=50"
+               alt="Business meeting"
+               width="350"
+               height="233"
+               loading="lazy">
+          <h2 class="teaser__title">Second Party</h2>
+          <p class="teaser__text">Learn about second-party data sharing and collaboration strategies.</p>
+          <a href="#" class="teaser__link" role="button">Read more</a>
         </article>
         <article class="teaser__base">
-          <img class="teaser__image" src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&fm=png&fit=crop&w=1170&q=100" class="card__img"><hr>
-          <h1 class="teaser__title">Third Party</h1>
-          <div class="teaser__text"></div>
-          <button class="teaser__link">Read more</button>
+          <img class="teaser__image"
+               src="https://images.unsplash.com/photo-1496024840928-4c417adf211d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fm=webp&fit=crop&w=350&q=50"
+               alt="Technology and data"
+               width="350"
+               height="233"
+               loading="lazy">
+          <h2 class="teaser__title">Third Party</h2>
+          <p class="teaser__text">Explore the changing landscape of third-party cookies and tracking.</p>
+          <a href="#" class="teaser__link" role="button">Read more</a>
         </article>
       </div>
       
-      <div class="main__weather main__section">
-        <a class="weatherwidget-io" href="https://forecast7.com/en/48d1411d58/munich/" data-label_1="MUNICH" data-label_2="WEATHER" data-theme="original" >MUNICH WEATHER</a>
-        <script>
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://blackhole.webpagetest.org/';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-        </script>
-      </div>
+      <section class="main__weather main__section" aria-label="Weather information">
+        <h2 class="visually-hidden">Munich Weather</h2>
+        <a class="weatherwidget-io" href="https://forecast7.com/en/48d1411d58/munich/" aria-label="View Munich weather forecast">MUNICH WEATHER</a>
+      </section>
       
-      <div class="main__video main__section">
-        <iframe src="https://player.vimeo.com/video/44265326?h=1e8b36c00b&autoplay=1&loop=1&byline=0&muted=1&controls=0 " width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-        <div class="form__base">
-          <div class="form__intro">Something about lighthouses, describing point of the video we are putting here to prove how awesome they really are, no.</div>
-          <div class="from__control">
-            <label class="form__label">Name</label>
-            <input type="text" />
-          </div>
-          <div class="from__control">
-            <label class="form__label">Please share with us why do you think lighthouses are awesome: </label>
-            <textarea></textarea>
-          </div>
-          <a class="form__button" id="button" onclick="alert('Submitting using way too much JavaScript...')">Submit</a>
+      <section class="main__video main__section">
+        <h2 class="visually-hidden">Lighthouse Video</h2>
+        <div class="video-container" id="vimeo-container" style="position: relative; width: 640px; max-width: 100%; height: 360px; background: #000; cursor: pointer;">
+          <button class="video-facade" id="video-play-btn" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); color: white; border: 2px solid white; border-radius: 50%; width: 80px; height: 80px; font-size: 0; cursor: pointer; z-index: 10;" aria-label="Play video">
+            <svg viewBox="0 0 24 24" width="40" height="40" style="margin-left: 5px;"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          </button>
+          <img src="https://vumbnail.com/44265326.jpg" alt="Video thumbnail" style="width: 100%; height: 100%; object-fit: cover;" width="640" height="360" loading="lazy">
         </div>
-    </div>
+        <form class="form__base" id="lighthouse-form" aria-labelledby="form-heading">
+          <h3 id="form-heading" class="visually-hidden">Lighthouse Feedback Form</h3>
+          <p class="form__intro">Something about lighthouses, describing point of the video we are putting here to prove how awesome they really are.</p>
+          <div class="form__control">
+            <label class="form__label" for="name-input">Name</label>
+            <input type="text" id="name-input" name="name" aria-required="true" />
+          </div>
+          <div class="form__control">
+            <label class="form__label" for="feedback-textarea">Please share with us why do you think lighthouses are awesome:</label>
+            <textarea id="feedback-textarea" name="feedback" aria-required="true"></textarea>
+          </div>
+          <button type="submit" class="form__button" id="button">Submit</button>
+        </form>
+      </section>
   </main>
   
-  <div class="disclaimer__base">
+  <aside class="disclaimer__base" role="note">
     <p class="disclaimer__text">
-      This site is made for the purpose of web performance and accessibility testing challeng and it is full of bad practices on purpose.
+      This site is made for the purpose of web performance and accessibility testing challenge and it is full of bad practices on purpose.
     </p>
-  </div>
-  
-  <div class="footer__base">
+  </aside>
+
+  <footer class="footer__base">
     <div class="footer__content">
-      <div class="footer__menu">
+      <nav class="footer__menu" aria-label="Footer navigation">
         <a href="#" class="footer__link">About Us</a>
         <a href="https://www.netcentric.biz/legal/imprint.html" class="footer__link">Imprint</a>
         <a href="https://www.netcentric.biz/legal/privacy.html" class="footer__link">Privacy</a>
-      </div>
-      <div class="footer__sponsor">Powered by <a href="https://www.netcentric.biz/">Cognizant Netcentric</a></div>
+      </nav>
+      <p class="footer__sponsor">Powered by <a href="https://www.netcentric.biz/">Cognizant Netcentric</a></p>
     </div>
-  </div>
-  <script src="script/app.js"></script>
+  </footer>
+
+  <!-- Deferred Scripts -->
+  <script src="script/app.js" defer></script>
 </body>
